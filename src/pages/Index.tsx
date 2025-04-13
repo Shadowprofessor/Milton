@@ -1,6 +1,5 @@
-
 import { useEffect } from 'react';
-import { ArrowDown, Rocket, Planet, Users, Zap, Globe, Award } from 'lucide-react';
+import { ArrowDown, Rocket, Users, Zap, Star, Globe, Award } from 'lucide-react';
 
 const Index = () => {
   useEffect(() => {
@@ -61,7 +60,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { 
-                icon: <Planet className="text-space-cyan" size={40} />, 
+                icon: <Star className="text-space-cyan" size={40} />, 
                 title: "Explore Planets", 
                 desc: "Discover and explore hundreds of procedurally generated planets, each with unique ecosystems and resources." 
               },
