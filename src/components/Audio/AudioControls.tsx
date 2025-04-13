@@ -2,24 +2,96 @@
 import { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Music, Music2 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import { useLocation } from 'react-router-dom';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+
+// Define soundtrack mapping by route
+const SOUNDTRACK_MAPPING = {
+  '/': '/assets/audio/echoes-in-the-void.mp3',      // Main menu/landing
+  '/missions': '/assets/audio/charting-the-unknown.mp3', // Mission selection
+  '/lore': '/assets/audio/memories-of-continuum.mp3',   // Lore section
+  '/community': '/assets/audio/starborn-warpath.mp3',   // Community battles
+  '/media': '/assets/audio/aetherion-silence.mp3',     // Media gallery
+  '/leaderboard': '/assets/audio/starborn-warpath.mp3',  // Competitive section
+};
 
 const AudioControls = () => {
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [sfxEnabled, setSfxEnabled] = useState(true);
   const [volume, setVolume] = useState(0.5);
+  const [currentTrack, setCurrentTrack] = useState('');
   
+  const location = useLocation();
   const bgMusicRef = useRef<HTMLAudioElement | null>(null);
   const hoverSoundRef = useRef<HTMLAudioElement | null>(null);
   const clickSoundRef = useRef<HTMLAudioElement | null>(null);
 
+  // Initialize audio elements
   useEffect(() => {
-    bgMusicRef.current = new Audio('/assets/audio/background-space.mp3');
+    // Create audio elements
+    bgMusicRef.current = new Audio();
     bgMusicRef.current.loop = true;
     bgMusicRef.current.volume = volume;
     
     hoverSoundRef.current = new Audio('/assets/audio/hover.mp3');
     clickSoundRef.current = new Audio('/assets/audio/click.mp3');
     
+    return () => {
+      if (bgMusicRef.current) {
+        bgMusicRef.current.pause();
+        bgMusicRef.current = null;
+      }
+    };
+  }, []);
+  
+  // Handle route-based soundtrack changes
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const newTrack = SOUNDTRACK_MAPPING[currentPath as keyof typeof SOUNDTRACK_MAPPING] || SOUNDTRACK_MAPPING['/'];
+    
+    if (newTrack !== currentTrack) {
+      setCurrentTrack(newTrack);
+      
+      if (bgMusicRef.current && musicEnabled) {
+        bgMusicRef.current.src = newTrack;
+        bgMusicRef.current.load();
+        bgMusicRef.current.play().catch(err => {
+          console.log('Background music play failed:', err);
+        });
+      }
+    }
+  }, [location, musicEnabled, currentTrack]);
+  
+  // Handle music toggle
+  useEffect(() => {
+    if (bgMusicRef.current) {
+      if (musicEnabled && currentTrack) {
+        bgMusicRef.current.src = currentTrack;
+        bgMusicRef.current.load();
+        bgMusicRef.current.play().catch(err => {
+          console.log('Background music play failed:', err);
+          setMusicEnabled(false);
+        });
+      } else {
+        bgMusicRef.current.pause();
+      }
+    }
+  }, [musicEnabled, currentTrack]);
+  
+  // Handle volume change
+  useEffect(() => {
+    if (bgMusicRef.current) {
+      bgMusicRef.current.volume = volume;
+    }
+  }, [volume]);
+  
+  // Set up sound effects
+  useEffect(() => {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if ((target.tagName === 'A' || 
@@ -48,37 +120,40 @@ const AudioControls = () => {
     return () => {
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('click', handleClick);
-      
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause();
-        bgMusicRef.current = null;
-      }
     };
   }, [sfxEnabled, volume]);
-  
-  useEffect(() => {
-    if (bgMusicRef.current) {
-      if (musicEnabled) {
-        bgMusicRef.current.play().catch(err => {
-          console.log('Background music play failed:', err);
-          setMusicEnabled(false);
-        });
-      } else {
-        bgMusicRef.current.pause();
-      }
-    }
-  }, [musicEnabled]);
-  
-  useEffect(() => {
-    if (bgMusicRef.current) {
-      bgMusicRef.current.volume = volume;
-    }
-  }, [volume]);
+
+  // Get current soundtrack name for display
+  const getCurrentSoundtrackName = () => {
+    const pathToNameMap: Record<string, string> = {
+      '/assets/audio/echoes-in-the-void.mp3': 'Echoes in the Void',
+      '/assets/audio/charting-the-unknown.mp3': 'Charting the Unknown',
+      '/assets/audio/memories-of-continuum.mp3': 'Memories of Continuum',
+      '/assets/audio/starborn-warpath.mp3': 'Starborn Warpath',
+      '/assets/audio/aetherion-silence.mp3': 'Aetherion Silence',
+    };
+    
+    return pathToNameMap[currentTrack] || 'Unknown Track';
+  };
 
   return (
     <div className="fixed bottom-4 right-4 z-50 glassmorphism p-3 rounded-lg space-y-3 hover:border-space-cyan/50 transition-colors duration-300">
       <div className="flex items-center gap-3">
-        {musicEnabled ? <Music2 className="text-space-cyan animate-pulse-bright" size={18} /> : <Music className="text-muted-foreground" size={18} />}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {musicEnabled ? (
+                <Music2 className="text-space-cyan animate-pulse-bright" size={18} />
+              ) : (
+                <Music className="text-muted-foreground" size={18} />
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              {musicEnabled ? 'Now Playing: ' + getCurrentSoundtrackName() : 'Music Off'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
         <Switch 
           checked={musicEnabled} 
           onCheckedChange={setMusicEnabled}
@@ -88,7 +163,21 @@ const AudioControls = () => {
       </div>
       
       <div className="flex items-center gap-3">
-        {sfxEnabled ? <Volume2 className="text-space-cyan" size={18} /> : <VolumeX className="text-muted-foreground" size={18} />}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {sfxEnabled ? (
+                <Volume2 className="text-space-cyan" size={18} />
+              ) : (
+                <VolumeX className="text-muted-foreground" size={18} />
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              {sfxEnabled ? 'Sound Effects On' : 'Sound Effects Off'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
         <Switch 
           checked={sfxEnabled} 
           onCheckedChange={setSfxEnabled}
