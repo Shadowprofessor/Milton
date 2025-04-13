@@ -1,7 +1,9 @@
+
 import { useEffect } from 'react';
 import { Rocket, Clock, Users, AlertTriangle, DollarSign, Star } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from "@/lib/utils";
+import OmegaProtocol from '@/components/Missions/OmegaProtocol';
 
 const Missions = () => {
   useEffect(() => {
@@ -53,6 +55,9 @@ const Missions = () => {
           </div>
         </div>
       </section>
+      
+      {/* Omega Protocol Section */}
+      <OmegaProtocol />
       
       {/* Featured Mission */}
       <section className="py-12">

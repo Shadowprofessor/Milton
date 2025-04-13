@@ -1,3 +1,13 @@
 
-# This directory contains audio files for the application
-# Add your audio files here with the names specified in the AudioControls.tsx component
+# Audio files needed for the application
+
+This directory needs to contain the following audio files:
+- echoes-in-the-void.mp3 - Main menu / Landing page music
+- charting-the-unknown.mp3 - Mission selection music
+- memories-of-continuum.mp3 - Lore section music
+- starborn-warpath.mp3 - Combat/Community section music
+- aetherion-silence.mp3 - Media gallery / Deep space exploration music
+- hover.mp3 - Button/link hover sound effect
+- click.mp3 - Button/link click sound effect
+
+Please add these audio files to make the audio functionality work properly.

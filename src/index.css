@@ -46,6 +46,36 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 230 35% 7%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 35% 7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 35% 7%;
+
+    --primary: 169 66% 40%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 218 91% 60%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 230 25% 85%;
+    --muted-foreground: 230 25% 35%;
+
+    --accent: 282 100% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 230 15% 75%;
+    --input: 230 15% 75%;
+    --ring: 169 66% 40%;
+  }
 }
 
 @layer base {
@@ -67,7 +97,8 @@
 
 @layer components {
   .cosmic-gradient {
-    @apply bg-gradient-to-br from-space-purple via-[#1e1e3a] to-space-dark;
+    @apply bg-gradient-to-br from-space-purple via-[#1e1e3a] to-space-dark dark:from-space-purple dark:via-[#1e1e3a] dark:to-space-dark
+    light:from-blue-400 light:via-blue-200 light:to-white;
   }
   
   .neon-border {
@@ -95,7 +126,7 @@
   }
   
   .glassmorphism {
-    @apply bg-space-dark/40 backdrop-blur-md border border-space-purple/30;
+    @apply bg-space-dark/40 backdrop-blur-md border border-space-purple/30 dark:bg-space-dark/40 dark:border-space-purple/30 light:bg-white/60 light:border-blue-300/50;
   }
   
   .cosmic-card {
