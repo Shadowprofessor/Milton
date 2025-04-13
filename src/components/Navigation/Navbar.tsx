@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from './ThemeToggle';
+import { Button } from '@/components/ui/button';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -48,26 +49,26 @@ const Navbar = () => {
         </Link>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => (
-            <Link
+            <Button
               key={link.path}
-              to={link.path}
+              variant="ghost"
               className={cn(
-                "relative px-1 py-2 font-medium tracking-wider transition-colors duration-300 hover:text-space-cyan group",
+                "relative tracking-wider transition-colors duration-300 hover:text-space-cyan",
                 location.pathname === link.path ? "text-space-cyan" : "text-white"
               )}
+              asChild
             >
-              {link.name}
-              <span className={cn(
-                "absolute bottom-0 left-0 h-0.5 bg-space-cyan transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
-                location.pathname === link.path && "scale-x-100"
-              )}></span>
-            </Link>
+              <Link to={link.path}>
+                {link.name}
+                <span className={cn(
+                  "absolute bottom-0 left-0 h-0.5 w-full bg-space-cyan transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
+                  location.pathname === link.path && "scale-x-100"
+                )}></span>
+              </Link>
+            </Button>
           ))}
-        </div>
-
-        <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
         </div>
         
@@ -87,17 +88,20 @@ const Navbar = () => {
       )}>
         <div className="flex flex-col p-4">
           {navLinks.map((link) => (
-            <Link
+            <Button
               key={link.path}
-              to={link.path}
+              variant="ghost"
               className={cn(
-                "py-3 px-4 font-medium border-b border-space-purple/30 transition-colors duration-300 hover:bg-space-purple/10",
+                "justify-start py-3 px-4 font-medium border-b border-space-purple/30 transition-colors duration-300 hover:bg-space-purple/10 rounded-none",
                 location.pathname === link.path ? "text-space-cyan" : "text-white"
               )}
+              asChild
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              {link.name}
-            </Link>
+              <Link to={link.path}>
+                {link.name}
+              </Link>
+            </Button>
           ))}
           <div className="py-3 px-4 flex justify-start">
             <ThemeToggle />

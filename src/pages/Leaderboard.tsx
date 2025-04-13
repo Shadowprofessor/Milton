@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from 'react';
-import { Trophy, ArrowUp, ArrowDown, Minus, Medal, Star } from 'lucide-react';
+import { Trophy, ArrowUp, ArrowDown, Minus, Medal, Star, Users, Globe, Zap } from 'lucide-react';
 
 type LeaderboardEntry = {
   rank: number;

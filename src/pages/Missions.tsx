@@ -1,7 +1,7 @@
-
 import { useEffect } from 'react';
 import { Rocket, Clock, Users, AlertTriangle, DollarSign, Star } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { cn } from "@/lib/utils";
 
 const Missions = () => {
   useEffect(() => {
@@ -112,7 +112,7 @@ const Missions = () => {
                     <span className="text-muted-foreground">Mission Progress</span>
                     <span className="text-space-cyan">43%</span>
                   </div>
-                  <Progress value={43} className="h-2 bg-muted" indicatorClassName="bg-space-cyan" />
+                  <Progress value={43} className={cn("h-2 bg-muted", "before:bg-space-cyan")} />
                 </div>
                 <div className="flex flex-wrap gap-4 mb-6">
                   <div className="flex items-center gap-2">
@@ -200,7 +200,7 @@ const Missions = () => {
                       <span className="text-muted-foreground">Progress</span>
                       <span className="text-space-cyan">{mission.progress}%</span>
                     </div>
-                    <Progress value={mission.progress} className="h-1.5 bg-muted" indicatorClassName="bg-space-cyan" />
+                    <Progress value={mission.progress} className={cn("h-1.5 bg-muted", "before:bg-space-cyan")} />
                   </div>
                   <button className="text-space-cyan hover:text-space-cyan/80 text-sm font-medium transition-colors">
                     Continue Mission
